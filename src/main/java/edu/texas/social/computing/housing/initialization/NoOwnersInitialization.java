@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Initializes all houses with no owners
+ */
 public class NoOwnersInitialization implements InitializationStrategy {
     int n;
 
