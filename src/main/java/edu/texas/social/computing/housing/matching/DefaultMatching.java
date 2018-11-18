@@ -13,29 +13,38 @@ import java.util.Stack;
 
 public class DefaultMatching implements MatchingStrategy {
     List<Agent> agents;
-    List<Set<Integer>> Js = new ArrayList<>();
+    List<Set<House>> Js = new ArrayList<>();
+    Map<House, Agent> owners;
+    private ArrayList<ArrayList<House>> globalStates = new ArrayList<>();
     private int n;
-    private int[][] pref;
     private int[] G;
 
     @Override
     public Map<House, Agent> findMatching(List<Agent> agents, Map<House, Agent> initialOwners) {
         this.agents = agents;
-        pref = new int[n][n];
-        G = new int[n];
-        return initialOwners; // TODO: actually find owners.
+        this.owners = initialOwners;
+        initializeGlobalState();
+        solve();
+        return owners; // TODO: actually find owners.
     }
 
-    private void initializeState() {
-        generateJs();
+    private void initializeGlobalState() {
+        n = agents.size();
+        G = new int[n];
+
         //System.out.println(Js.toString());
         //System.out.println(agents.toString());
         for (int i = 0; i < n; i++) {
             G[i] = 0;
         }
 
+        generateJs();
+        genGlobalStates();
     }
 
+    /**
+     * This should update owners with correct matching.
+     */
     private void solve() {
         Stack<Agent> S = new Stack<>();
         for (int i = 0; i < agents.size(); i++) {
@@ -46,7 +55,7 @@ public class DefaultMatching implements MatchingStrategy {
             Agent agent = S.pop();
 
             // pick best house
-            House house = agent.preferences.get(0);
+//            House house = agent.preferences.get(0);
 
            /* int fiance = owners.get(choosee);
             if (fiance == -1) { // choosee is free
@@ -76,7 +85,7 @@ public class DefaultMatching implements MatchingStrategy {
             if (geq(F)) {
                 continue;
             }
-            for (Set<Integer> J : Js) {
+            for (Set<House> J : Js) {
                 //System.out.println(J.toString());
                 if (submatching(J)) {
                     if (!eq(F, J)) {
@@ -88,21 +97,21 @@ public class DefaultMatching implements MatchingStrategy {
         return true;
     }
 
-    private int wish(int i) {
-        return pref[i][G[i]];
+    private House wish(int i) {
+        return agents.get(i).preferences.get(G[i]);
     }
 
-    private ArrayList<Integer> wish(Set<Integer> J) {
-        ArrayList<Integer> wishArr = new ArrayList<>();
-        for (int i : J) {
-            wishArr.add(wish(i));
+    private ArrayList<House> wish(Set<House> J) {
+        ArrayList<House> wishArr = new ArrayList<>();
+        for (House i : J) {
+            wishArr.add(wish(i.index));
         }
         return wishArr;
     }
 
     private boolean matching() {
         for (int i = 0; i < n; i++) {
-            int iWish = wish(i);
+            House iWish = wish(i);
             for (int j = i + 1; j < n; j++) {
                 if (iWish == wish(j)) {
                     return false;
@@ -112,23 +121,23 @@ public class DefaultMatching implements MatchingStrategy {
         return true;
     }
 
-    private boolean submatching(Set<Integer> J) {
-        ArrayList<Integer> wishJ = wish(J);
+    private boolean submatching(Set<House> J) {
+        ArrayList<House> wishJ = wish(J);
         return isPermutation(J, wishJ);
     }
 
-    private boolean isPermutation(Set<Integer> A, ArrayList<Integer> B) {
-        Map<Integer, Integer> Amap = new HashMap<>();
-        Map<Integer, Integer> Bmap = new HashMap<>();
+    private boolean isPermutation(Set<House> A, ArrayList<House> B) {
+        Map<House, Integer> Amap = new HashMap<>();
+        Map<House, Integer> Bmap = new HashMap<>();
 
         if (A.size() != B.size()) {
             return false;
         }
 
-        for (int a : A) {
+        for (House a : A) {
             Amap.put(a, 1);
         }
-        for (int b : B) {
+        for (House b : B) {
             if (Bmap.containsKey(b)) {
                 //Bmap.put(b, Bmap.get(b) + 1);
                 return false;
@@ -151,10 +160,10 @@ public class DefaultMatching implements MatchingStrategy {
     private void generateJs() {
         // https://www.geeksforgeeks.org/finding-all-subsets-of-a-given-set-in-java/
         for (int i = 0; i < (1 << n); i++) {
-            Set<Integer> J = new HashSet<>();
+            Set<House> J = new HashSet<>();
             for (int j = 0; j < n; j++) {
                 if ((i & (1 << j)) > 0) {
-                    J.add(j);
+                    J.add(new House(j));
                 }
             }
             Js.add(J);
@@ -163,19 +172,37 @@ public class DefaultMatching implements MatchingStrategy {
 
     private boolean geq(Agent F) {
         for (int i = 0; i < n; i++) {
-            if (F.preferences.get(i).index < G[i]) { // TODO: this is wrong
+            if (F.preferences.get(i).index < G[i]) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean eq(Agent F, Set<Integer> J) {
-        for (int i : J) {
-            if (F.preferences.get(i).index != G[i]) { // TODO: this is wrong
+    private boolean eq(Agent F, Set<House> J) {
+        for (House i : J) {
+            if (F.preferences.get(i.index).index != G[i.index]) {
                 return false;
             }
         }
         return true;
+    }
+
+    private void genGlobalStates() {
+        // https://www.geeksforgeeks.org/print-all-combinations-of-given-length/
+        generateGlobalRec(new ArrayList<>(), n);
+    }
+
+    private void generateGlobalRec(ArrayList<House> prefix, int k) {
+        if (k == 0) {
+            // What should be here?
+            globalStates.add(prefix);
+            return;
+        }
+        for (int i = 0; i < n; ++i) {
+            ArrayList<House> newPrefix = new ArrayList<>(prefix);
+            newPrefix.add(new House(i+1));
+            generateGlobalRec(newPrefix, k - 1);
+        }
     }
 }
