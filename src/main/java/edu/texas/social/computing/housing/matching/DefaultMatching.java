@@ -10,7 +10,7 @@ public class DefaultMatching implements MatchingStrategy {
     List<Set<House>> Js = new ArrayList<>();
     Map<House, Agent> owners;
     private List<List<House>> globalStates = new ArrayList<>();
-    private int n;
+    private int NUM_AGENTS;
     private int[] G;
 
     @Override
@@ -23,12 +23,12 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private void initializeGlobalState() {
-        n = agents.size();
-        G = new int[n];
+        NUM_AGENTS = agents.size();
+        G = new int[NUM_AGENTS];
 
         //System.out.println(Js.toString());
         //System.out.println(agents.toString());
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < NUM_AGENTS; i++) {
             G[i] = 0; // everyone will start with first choice
         }
 
@@ -68,7 +68,7 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private void SetOwners() {
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i< NUM_AGENTS; i++) {
             Agent a = agents.get(i);
             House h = wish(i);
             owners.put(h, a);
@@ -112,9 +112,9 @@ public class DefaultMatching implements MatchingStrategy {
 
     private Map<House, Set<Agent>> matching() {
         Map<House, Set<Agent>> unmatched = new HashMap<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < NUM_AGENTS; i++) {
             House iWish = wish(i);
-            for (int j = i + 1; j < n; j++) {
+            for (int j = i + 1; j < NUM_AGENTS; j++) {
                 if (iWish.equals(wish(j))) {
                     Set<Agent> conflicts;
                     if (unmatched.containsKey(iWish)) {
@@ -169,9 +169,9 @@ public class DefaultMatching implements MatchingStrategy {
 
     private void generateJs() {
         // https://www.geeksforgeeks.org/finding-all-subsets-of-a-given-set-in-java/
-        for (int i = 0; i < (1 << n); i++) {
+        for (int i = 0; i < (1 << NUM_AGENTS); i++) {
             Set<House> J = new HashSet<>();
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < NUM_AGENTS; j++) {
                 if ((i & (1 << j)) > 0) {
                     J.add(new House(j));
                 }
@@ -181,7 +181,7 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private boolean geq(Agent F) {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < NUM_AGENTS; i++) {
             if (F.preferences.get(i).index < G[i]) {
                 return false;
             }
@@ -200,7 +200,7 @@ public class DefaultMatching implements MatchingStrategy {
 
     private void genGlobalStates() {
         // https://www.geeksforgeeks.org/print-all-combinations-of-given-length/
-        generateGlobalRec(new ArrayList<House>(), n);
+        generateGlobalRec(new ArrayList<House>(), NUM_AGENTS);
     }
 
     private void generateGlobalRec(List<House> prefix, int k) {
@@ -209,7 +209,7 @@ public class DefaultMatching implements MatchingStrategy {
             globalStates.add(prefix);
             return;
         }
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < NUM_AGENTS; ++i) {
             List<House> newPrefix = new ArrayList<>(prefix);
             newPrefix.add(new House(i+1));
             generateGlobalRec(newPrefix, k - 1);
