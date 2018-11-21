@@ -9,7 +9,7 @@ public class DefaultMatching implements MatchingStrategy {
     List<Agent> agents;
     List<Set<House>> Js = new ArrayList<>();
     Map<House, Agent> owners;
-    private ArrayList<ArrayList<House>> globalStates = new ArrayList<>();
+    private List<List<House>> globalStates = new ArrayList<>();
     private int n;
     private int[] G;
 
@@ -102,7 +102,7 @@ public class DefaultMatching implements MatchingStrategy {
         return agents.get(i).preferences.get(G[i]);
     }
 
-    private ArrayList<House> wish(Set<House> J) {
+    private List<House> wish(Set<House> J) {
         ArrayList<House> wishArr = new ArrayList<>();
         for (House i : J) {
             wishArr.add(wish(i.index));
@@ -132,11 +132,11 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private boolean submatching(Set<House> J) {
-        ArrayList<House> wishJ = wish(J);
+        List<House> wishJ = wish(J);
         return isPermutation(J, wishJ);
     }
 
-    private boolean isPermutation(Set<House> A, ArrayList<House> B) {
+    private boolean isPermutation(Set<House> A, List<House> B) {
         Map<House, Integer> Amap = new HashMap<>();
         Map<House, Integer> Bmap = new HashMap<>();
 
@@ -200,17 +200,17 @@ public class DefaultMatching implements MatchingStrategy {
 
     private void genGlobalStates() {
         // https://www.geeksforgeeks.org/print-all-combinations-of-given-length/
-        generateGlobalRec(new ArrayList<>(), n);
+        generateGlobalRec(new ArrayList<House>(), n);
     }
 
-    private void generateGlobalRec(ArrayList<House> prefix, int k) {
+    private void generateGlobalRec(List<House> prefix, int k) {
         if (k == 0) {
             // What should be here?
             globalStates.add(prefix);
             return;
         }
         for (int i = 0; i < n; ++i) {
-            ArrayList<House> newPrefix = new ArrayList<>(prefix);
+            List<House> newPrefix = new ArrayList<>(prefix);
             newPrefix.add(new House(i+1));
             generateGlobalRec(newPrefix, k - 1);
         }
