@@ -1,11 +1,11 @@
-package housing;
+package edu.texas.social.computing.housing;
 
 import java.util.*;
 
 /**
  * Created by tiffanytillett on 11/8/18.
  */
-public class Housing {
+public class OldImpl {
     private static int n;
     private static int[][] pref;
     private static int[] G;
@@ -67,7 +67,7 @@ public class Housing {
             } */
 
         }
-     }
+    }
 
 
     private static boolean B() {
