@@ -3,13 +3,7 @@ package edu.texas.social.computing.housing.matching;
 import edu.texas.social.computing.housing.objects.Agent;
 import edu.texas.social.computing.housing.objects.House;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class DefaultMatching implements MatchingStrategy {
     List<Agent> agents;
@@ -35,7 +29,7 @@ public class DefaultMatching implements MatchingStrategy {
         //System.out.println(Js.toString());
         //System.out.println(agents.toString());
         for (int i = 0; i < n; i++) {
-            G[i] = 0;
+            G[i] = 0; // everyone will start with first choice
         }
 
         generateJs();
@@ -46,40 +40,47 @@ public class DefaultMatching implements MatchingStrategy {
      * This should update owners with correct matching.
      */
     private void solve() {
-        Stack<Agent> S = new Stack<>();
-        for (int i = 0; i < agents.size(); i++) {
-            S.push(new Agent(i)); //add all agents to stack
+        Map<House, Set<Agent>> conflicts = matching();
+        while (conflicts.size() > 0) {
+            BreakTies(conflicts);
+            conflicts = matching();
         }
+        SetOwners();
+    }
 
-        while (!S.empty()) {
-            Agent agent = S.pop();
+    private void BreakTies(Map<House, Set<Agent>> conflicts) {
+        for (House h: conflicts.keySet()) {
+            Set<Agent> ties = conflicts.get(h);
 
-            // pick best house
-//            House house = agent.preferences.get(0);
-
-           /* int fiance = owners.get(choosee);
-            if (fiance == -1) { // choosee is free
-                owners.put(choosee, chooser); // chooser gets engaged to choosee
-            } else {
-                List<Integer> wPrefs = chooseePref.get(choosee);
-                int prefCur = wPrefs.indexOf(fiance);
-                int prefNew = wPrefs.indexOf(chooser);
-
-                if (prefCur < prefNew) { // choosee prefers existing fiancee
-                    Q.add(chooser);
-                } else {
-                    owners.put(choosee, chooser);
-                    Q.add(fiance);
+            // agent with lowest number wins
+            int min = -1;
+            for (Agent a: ties) {
+                if (min == -1 || a.index < min) {
+                    min = a.index;
                 }
-            } */
-
+            }
+            for (Agent a: ties) {
+                if (a.index != min) {
+                    G[a.index] = G[a.index] + 1;
+                }
+            }
         }
     }
 
-    private boolean B() {
-        if (!matching()) {
-            return false;
+    private void SetOwners() {
+        for (int i=0; i<n; i++) {
+            Agent a = agents.get(i);
+            House h = wish(i);
+            owners.put(h, a);
         }
+    }
+
+   /* private Set<Conflict> B() {
+        Set<Conflict> unmatched = matching();
+        if (unmatched.size() > 0) {
+            return unmatched;
+        }
+        return null;
 
         for (Agent F : agents) {
             if (geq(F)) {
@@ -95,7 +96,7 @@ public class DefaultMatching implements MatchingStrategy {
             }
         }
         return true;
-    }
+    } */
 
     private House wish(int i) {
         return agents.get(i).preferences.get(G[i]);
@@ -109,16 +110,25 @@ public class DefaultMatching implements MatchingStrategy {
         return wishArr;
     }
 
-    private boolean matching() {
+    private Map<House, Set<Agent>> matching() {
+        Map<House, Set<Agent>> unmatched = new HashMap<>();
         for (int i = 0; i < n; i++) {
             House iWish = wish(i);
             for (int j = i + 1; j < n; j++) {
-                if (iWish == wish(j)) {
-                    return false;
+                if (iWish.equals(wish(j))) {
+                    Set<Agent> conflicts;
+                    if (unmatched.containsKey(iWish)) {
+                        conflicts = unmatched.get(iWish);
+                    } else {
+                        conflicts = new HashSet<>();
+                    }
+                    conflicts.add(agents.get(i));
+                    conflicts.add(agents.get(j));
+                    unmatched.put(iWish, conflicts);
                 }
             }
         }
-        return true;
+        return unmatched;
     }
 
     private boolean submatching(Set<House> J) {
