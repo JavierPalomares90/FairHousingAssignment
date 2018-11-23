@@ -9,8 +9,8 @@ public class DefaultMatching implements MatchingStrategy {
     List<Agent> agents;
     List<Set<House>> Js = new ArrayList<>();
     Map<House, Agent> owners;
-    private ArrayList<ArrayList<House>> globalStates = new ArrayList<>();
-    private int n;
+    private List<List<House>> globalStates = new ArrayList<>();
+    private int NUM_AGENTS;
     private int[] G;
 
     @Override
@@ -23,12 +23,12 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private void initializeGlobalState() {
-        n = agents.size();
-        G = new int[n];
+        NUM_AGENTS = agents.size();
+        G = new int[NUM_AGENTS];
 
         //System.out.println(Js.toString());
         //System.out.println(agents.toString());
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < NUM_AGENTS; i++) {
             G[i] = 0; // everyone will start with first choice
         }
 
@@ -68,7 +68,7 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private void SetOwners() {
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i< NUM_AGENTS; i++) {
             Agent a = agents.get(i);
             House h = wish(i);
             owners.put(h, a);
@@ -102,7 +102,7 @@ public class DefaultMatching implements MatchingStrategy {
         return agents.get(i).preferences.get(G[i]);
     }
 
-    private ArrayList<House> wish(Set<House> J) {
+    private List<House> wish(Set<House> J) {
         ArrayList<House> wishArr = new ArrayList<>();
         for (House i : J) {
             wishArr.add(wish(i.index));
@@ -112,9 +112,9 @@ public class DefaultMatching implements MatchingStrategy {
 
     private Map<House, Set<Agent>> matching() {
         Map<House, Set<Agent>> unmatched = new HashMap<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < NUM_AGENTS; i++) {
             House iWish = wish(i);
-            for (int j = i + 1; j < n; j++) {
+            for (int j = i + 1; j < NUM_AGENTS; j++) {
                 if (iWish.equals(wish(j))) {
                     Set<Agent> conflicts;
                     if (unmatched.containsKey(iWish)) {
@@ -132,11 +132,11 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private boolean submatching(Set<House> J) {
-        ArrayList<House> wishJ = wish(J);
+        List<House> wishJ = wish(J);
         return isPermutation(J, wishJ);
     }
 
-    private boolean isPermutation(Set<House> A, ArrayList<House> B) {
+    private boolean isPermutation(Set<House> A, List<House> B) {
         Map<House, Integer> Amap = new HashMap<>();
         Map<House, Integer> Bmap = new HashMap<>();
 
@@ -169,9 +169,9 @@ public class DefaultMatching implements MatchingStrategy {
 
     private void generateJs() {
         // https://www.geeksforgeeks.org/finding-all-subsets-of-a-given-set-in-java/
-        for (int i = 0; i < (1 << n); i++) {
+        for (int i = 0; i < (1 << NUM_AGENTS); i++) {
             Set<House> J = new HashSet<>();
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < NUM_AGENTS; j++) {
                 if ((i & (1 << j)) > 0) {
                     J.add(new House(j));
                 }
@@ -181,7 +181,7 @@ public class DefaultMatching implements MatchingStrategy {
     }
 
     private boolean geq(Agent F) {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < NUM_AGENTS; i++) {
             if (F.preferences.get(i).index < G[i]) {
                 return false;
             }
@@ -200,17 +200,17 @@ public class DefaultMatching implements MatchingStrategy {
 
     private void genGlobalStates() {
         // https://www.geeksforgeeks.org/print-all-combinations-of-given-length/
-        generateGlobalRec(new ArrayList<>(), n);
+        generateGlobalRec(new ArrayList<House>(), NUM_AGENTS);
     }
 
-    private void generateGlobalRec(ArrayList<House> prefix, int k) {
+    private void generateGlobalRec(List<House> prefix, int k) {
         if (k == 0) {
             // What should be here?
             globalStates.add(prefix);
             return;
         }
-        for (int i = 0; i < n; ++i) {
-            ArrayList<House> newPrefix = new ArrayList<>(prefix);
+        for (int i = 0; i < NUM_AGENTS; ++i) {
+            List<House> newPrefix = new ArrayList<>(prefix);
             newPrefix.add(new House(i+1));
             generateGlobalRec(newPrefix, k - 1);
         }
