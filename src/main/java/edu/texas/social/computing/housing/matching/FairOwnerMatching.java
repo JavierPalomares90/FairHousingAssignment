@@ -81,10 +81,10 @@ public class FairOwnerMatching implements MatchingStrategy {
                 }
             }
             Agent winner = curOwner;
-            if (curOwner == null) {
+            if (winner == null) {
                 Random rand = new Random();
 
-                int index = rand.nextInt(worstCurHouse.size()) + 1;
+                int index = rand.nextInt(worstCurHouse.size());
                 winner = worstCurHouse.get(index);
             }
             for (Agent a: ties) {
@@ -158,6 +158,7 @@ public class FairOwnerMatching implements MatchingStrategy {
                     }
                     conflicts.add(agents.get(i));
                     conflicts.add(agents.get(j));
+                    unmatched.put(iWish, conflicts);
                 }
             }
         }
