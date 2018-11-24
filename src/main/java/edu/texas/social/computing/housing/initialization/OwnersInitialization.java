@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Initializes all houses with no owners
  */
-public class NoOwnersInitialization implements InitializationStrategy {
+public class OwnersInitialization implements InitializationStrategy {
     int n;
 
     @Override
@@ -19,7 +19,8 @@ public class NoOwnersInitialization implements InitializationStrategy {
         Map<House, Agent> owners = new HashMap<>();
         for (int i=0; i<n; i++) {
             House h = new House(i);
-            owners.put(h, null);
+            Agent a = agents.get(i);
+            owners.put(h, a);
         }
         return owners;
     }

@@ -5,7 +5,7 @@ import edu.texas.social.computing.housing.objects.House;
 
 import java.util.*;
 
-public class DefaultMatching implements MatchingStrategy {
+public class FairOwnerMatching implements MatchingStrategy {
     List<Agent> agents;
     List<House> houses;
     List<Set<House>> Js = new ArrayList<>();
@@ -53,16 +53,42 @@ public class DefaultMatching implements MatchingStrategy {
     private void BreakTies(Map<House, Set<Agent>> conflicts) {
         for (House h: conflicts.keySet()) {
             Set<Agent> ties = conflicts.get(h);
+            Agent o = owners.get(h);
 
-            // agent with lowest number wins
-            int min = -1;
+            Agent curOwner = null;
+            int worstPref = -1;
+            List<Agent> worstCurHouse = new ArrayList<>();
             for (Agent a: ties) {
-                if (min == -1 || a.index < min) {
-                    min = a.index;
+                if (a.equals(o)) { // this agent currently owns house so they win
+                    curOwner = a;
+                    break;
+                }
+                // figure out index in prefs of agent's current house
+                int pref = NUM_AGENTS - 1;
+                for (int i=0; i<NUM_AGENTS; i++) {
+                    House p = a.preferences.get(i);
+                    if (a.equals(owners.get(p))) { // agent owns this house
+                        pref = i;
+                        break;
+                    }
+                }
+                if (pref > worstPref) {
+                    worstPref = pref;
+                    worstCurHouse.clear();
+                    worstCurHouse.add(a);
+                } else if (pref == worstPref) { // still have tie
+                    worstCurHouse.add(a);
                 }
             }
+            Agent winner = curOwner;
+            if (curOwner == null) {
+                Random rand = new Random();
+
+                int index = rand.nextInt(worstCurHouse.size()) + 1;
+                winner = worstCurHouse.get(index);
+            }
             for (Agent a: ties) {
-                if (a.index != min) {
+                if (! a.equals(winner)) {
                     G[a.index] = G[a.index] + 1;
                 }
             }
@@ -114,8 +140,14 @@ public class DefaultMatching implements MatchingStrategy {
 
     private Map<House, Set<Agent>> matching() {
         Map<House, Set<Agent>> unmatched = new HashMap<>();
+        /*for (int i=0; i<NUM_AGENTS; i++) {
+            House h = houses.get(i);
+            Set<Agent> conflicts = new HashSet<>();
+            conflicts.add(owners.get(h)); // add current owner to conflicts
+        } */
         for (int i = 0; i < NUM_AGENTS; i++) {
             House iWish = wish(i);
+
             for (int j = i + 1; j < NUM_AGENTS; j++) {
                 if (iWish.equals(wish(j))) {
                     Set<Agent> conflicts;
@@ -126,7 +158,6 @@ public class DefaultMatching implements MatchingStrategy {
                     }
                     conflicts.add(agents.get(i));
                     conflicts.add(agents.get(j));
-                    unmatched.put(iWish, conflicts);
                 }
             }
         }

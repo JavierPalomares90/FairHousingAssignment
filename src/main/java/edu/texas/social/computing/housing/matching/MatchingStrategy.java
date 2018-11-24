@@ -11,6 +11,6 @@ import java.util.Map;
  */
 public interface MatchingStrategy {
 
-    public Map<House, Agent> findMatching(List<Agent> agents, Map<House, Agent> initialOwners);
+    public Map<House, Agent> findMatching(List<Agent> agents, Map<House, Agent> initialOwners, List<House> houses);
 
 }
