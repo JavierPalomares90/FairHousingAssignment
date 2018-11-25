@@ -33,11 +33,11 @@ public abstract class Housing {
 
     public void initialize() {
         //agents = initializationStrategy.initializeAgents(n);
-        owners = initializationStrategy.initializeOwners(n);
+        owners = initializationStrategy.initializeOwners(n, agents);
     }
 
     public Map<House, Agent> solve() {
-       return this.matchingStrategy.findMatching(agents, owners);
+       return this.matchingStrategy.findMatching(agents, owners, houses);
     }
 
     private int ParseFile(String filename) {
