@@ -1,7 +1,9 @@
 package edu.texas.social.computing.housing;
 
+import edu.texas.social.computing.housing.initialization.NoOwnersInitialization;
 import edu.texas.social.computing.housing.initialization.OwnersInitialization;
 import edu.texas.social.computing.housing.matching.FairOwnerMatching;
+import edu.texas.social.computing.housing.matching.PoorestAgentWinsMatching;
 import edu.texas.social.computing.housing.objects.Agent;
 import edu.texas.social.computing.housing.objects.House;
 
@@ -12,6 +14,7 @@ public class Assignment
 
     private static String DEFAULT_OPTION = "1";
     private static String FAIR_HOUSING_OPTION = "2";
+    private static String POOREST_HOUSING_OPTION = "3";
 
 
     public static void main(String[] args)
@@ -27,6 +30,9 @@ public class Assignment
         }else if (DEFAULT_OPTION.equals(housingSelection))
         {
             housing = new NoOwnersDefaultMatchingHousing(filename);
+        }else if (POOREST_HOUSING_OPTION.equals(housingSelection))
+        {
+            housing = new FairHousing(filename, new NoOwnersInitialization(), new PoorestAgentWinsMatching());
         }
         if(housing == null)return;
 
