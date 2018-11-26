@@ -57,7 +57,7 @@ public class Allocation {
 
 			int midPoint = preferences.size() / 2;
 			int preferenceIndex = getPreferenceIndex(assignedHouse,preferences);
-			return Math.abs(preferenceIndex - midPoint);
+			fairness += Math.abs(preferenceIndex - midPoint);
 		}
 		return fairness;
 	}
