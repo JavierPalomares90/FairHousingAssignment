@@ -28,7 +28,7 @@ public abstract class Matching implements MatchingStrategy
     /**
      * update owners with their matching.
      */
-    public void solve() {
+    void solve() {
         Map<House, Set<Agent>> conflicts = matching();
         while (conflicts.size() > 0) {
             BreakTies(conflicts);
@@ -58,7 +58,7 @@ public abstract class Matching implements MatchingStrategy
         return unmatched;
     }
 
-    private void SetOwners() {
+    void SetOwners() {
         for (int i = 0; i< NUM_AGENTS; i++) {
             Agent a = agents.get(i);
             House h = wish(i);
@@ -68,12 +68,10 @@ public abstract class Matching implements MatchingStrategy
 
     abstract void BreakTies(Map<House,Set<Agent>> conflicts);
 
-    public void initializeGlobalState() {
+    void initializeGlobalState() {
         NUM_AGENTS = agents.size();
         G = new int[NUM_AGENTS];
 
-        //System.out.println(Js.toString());
-        //System.out.println(agents.toString());
         for (int i = 0; i < NUM_AGENTS; i++) {
             G[i] = 0; // everyone will start with first choice
         }
@@ -82,12 +80,12 @@ public abstract class Matching implements MatchingStrategy
         genGlobalStates();
     }
 
-    public void genGlobalStates() {
+    void genGlobalStates() {
         // https://www.geeksforgeeks.org/print-all-combinations-of-given-length/
         generateGlobalRec(new ArrayList<House>(), NUM_AGENTS);
     }
 
-    public void generateGlobalRec(List<House> prefix, int k) {
+    void generateGlobalRec(List<House> prefix, int k) {
         if (k == 0) {
             // What should be here?
             globalStates.add(prefix);
@@ -100,7 +98,7 @@ public abstract class Matching implements MatchingStrategy
         }
     }
 
-    public void generateJs() {
+    void generateJs() {
         // https://www.geeksforgeeks.org/finding-all-subsets-of-a-given-set-in-java/
         for (int i = 0; i < (1 << NUM_AGENTS); i++) {
             Set<House> J = new HashSet<>();
@@ -113,12 +111,12 @@ public abstract class Matching implements MatchingStrategy
         }
     }
 
-    private boolean submatching(Set<House> J) {
+    boolean submatching(Set<House> J) {
         List<House> wishJ = wish(J);
         return isPermutation(J, wishJ);
     }
 
-    private boolean isPermutation(Set<House> A, List<House> B) {
+    boolean isPermutation(Set<House> A, List<House> B) {
         Map<House, Integer> Amap = new HashMap<>();
         Map<House, Integer> Bmap = new HashMap<>();
 
@@ -149,11 +147,15 @@ public abstract class Matching implements MatchingStrategy
 
     }
 
-    public House wish(int i) {
+    House wish(int i) {
         return agents.get(i).preferences.get(G[i]);
     }
 
-    public List<House> wish(Set<House> J) {
+    House wish(Agent a) {
+        return a.preferences.get(G[a.index]);
+    }
+
+    List<House> wish(Set<House> J) {
         ArrayList<House> wishArr = new ArrayList<>();
         for (House i : J) {
             wishArr.add(wish(i.index));
@@ -161,7 +163,7 @@ public abstract class Matching implements MatchingStrategy
         return wishArr;
     }
 
-    public boolean geq(Agent F) {
+    boolean geq(Agent F) {
         for (int i = 0; i < NUM_AGENTS; i++) {
             if (F.preferences.get(i).index < G[i]) {
                 return false;
@@ -170,7 +172,7 @@ public abstract class Matching implements MatchingStrategy
         return true;
     }
 
-    public boolean eq(Agent F, Set<House> J) {
+    boolean eq(Agent F, Set<House> J) {
         for (House i : J) {
             if (F.preferences.get(i.index).index != G[i.index]) {
                 return false;

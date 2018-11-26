@@ -33,6 +33,21 @@ public class PoorestAgentWinsMatching extends Matching
         }
     }
 
+    @Override
+    House wish(int i)
+    {
+        Agent agent = agents.get(i);
+        List<House> preferences = agent.preferences;
+        int mid = preferences.size() / 2;
+        int numProposals = G[i];
+        // First proposal is mid, then mid+1,mid-1,mid+2,mid-2 and so on
+        // Want the proposal to be as close to the middle
+        int proposal = mid + (int)Math.pow(-1.0,numProposals) * ((numProposals+1) / 2);
+
+        House house = preferences.get(proposal);
+        return house;
+    }
+
     // Find the agent with the worst current assignment.
     // Give the house to this agent
     private Agent getPoorestAgent(Set<Agent> agents)
