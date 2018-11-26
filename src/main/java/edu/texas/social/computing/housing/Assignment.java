@@ -38,6 +38,7 @@ public class Assignment
 
         Map<House, Agent> owners = housing.solve();
         PrintOwners(owners);
+        PrintAvgRank(owners);
     }
 
     private static void PrintOwners(Map<House, Agent> owners) {
@@ -49,4 +50,23 @@ public class Assignment
         }
     }
 
+    private static void PrintAvgRank(Map<House, Agent> owners) {
+        int numRanks = 0;
+        double sumRanks = 0.0;
+        for (House h: owners.keySet()) {
+            int rank = 0;
+            Agent a = owners.get(h);
+            for (int i = 0; i<a.preferences.size(); i++ ) {
+                if (a.preferences.get(i).index == h.index) {
+                    rank = i + 1;
+                    numRanks++;
+                    sumRanks += rank;
+                    break;
+                }
+            }
+            System.out.println("Agent " + (a.index+1) + " owns House " + (h.index+1) + " with rank " + rank);
+        }
+        double avgRank = sumRanks / numRanks;
+        System.out.println("Average rank of allocated Houses to Agents is " + avgRank);
+    } // End PrintAvgRank()
 }
