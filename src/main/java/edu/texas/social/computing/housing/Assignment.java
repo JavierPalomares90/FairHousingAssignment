@@ -5,11 +5,13 @@ import edu.texas.social.computing.housing.initialization.OwnersInitialization;
 import edu.texas.social.computing.housing.matching.FairOwnerMatching;
 import edu.texas.social.computing.housing.matching.PoorestAgentWinsMatching;
 import edu.texas.social.computing.housing.objects.Agent;
+import edu.texas.social.computing.housing.objects.Allocation;
 import edu.texas.social.computing.housing.objects.House;
 import edu.texas.social.computing.housing.AgentOrdering;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Set;
 
 public class Assignment
 {
@@ -18,6 +20,7 @@ public class Assignment
     private static String FAIR_HOUSING_OPTION = "2";
     private static String POOREST_HOUSING_OPTION = "3";
     private static String AGENT_PRIORITY_HOUSING_OPTION = "4";
+    private static Set<Allocation> allocations;
 
 
     public static void main(String[] args)
@@ -49,13 +52,26 @@ public class Assignment
                 housing = new FairHousing(filename, new NoOwnersInitialization(), new FairOwnerMatching(), agentPrior);
                 Map<House, Agent> owners = housing.solve();
 
-                // TODO: #3 - Save off maps of owners to some data structure
+                // Add the allocation to the list of allocations
+                Allocation allocation = new Allocation(owners);
+                allocations.add(allocation);
                 PrintOwners(owners);
                 PrintAvgRank(owners);
 
                 System.out.println();
             }
-            // TODO: #4 - Compare all allocations and determine which one is best/fair
+            // Get the most fair allocation
+            int minFairScore = Integer.MAX_VALUE;
+            Allocation best = null;
+            for (Allocation a: allocations)
+            {
+                int fairness = a.getFairnessScore();
+                if(fairness < minFairScore)
+                {
+                    minFairScore = fairness;
+                    best = a;
+                }
+            }
             return;
         }
         if(housing == null)return;
