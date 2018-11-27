@@ -25,4 +25,9 @@ public class Agent {
         result = (result*PRIME) + (int)(temp1 ^ (temp1 >>> 32));
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "agent: " + index;
+    }
 }

@@ -26,6 +26,7 @@ public class OldImpl {
 
     }
 
+
     private static void Init() {
         GenGlobalStates();
         GenJs();
