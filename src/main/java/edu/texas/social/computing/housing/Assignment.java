@@ -57,10 +57,7 @@ public class Assignment
                 // Add the allocation to the list of allocations
                 Allocation allocation = new Allocation(owners);
                 allocations.add(allocation);
-                //PrintOwners(owners);
-                //PrintAvgRank(owners);
 
-                //System.out.println();
             }
             // Get the most fair allocation
             double minFairScore = Double.MAX_VALUE;

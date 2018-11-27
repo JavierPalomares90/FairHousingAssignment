@@ -76,10 +76,8 @@ public class Allocation {
 					break;
 				}
 			}
-			//System.out.println("Agent " + (a.index+1) + " owns House " + (h.index+1) + " with rank " + rank);
 		}
 		double avgRank = sumRanks / numRanks;
-		System.out.println("Average rank of allocated Houses to Agents is " + avgRank);
 		return avgRank;
 	} // End PrintAvgRank()
 
