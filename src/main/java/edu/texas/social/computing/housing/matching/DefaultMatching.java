@@ -32,6 +32,7 @@ public class DefaultMatching extends Matching
                                 min = i;
                                 highPrior = a.index;
                             }
+                            break;
                         }
                     } // End loop through agent priority list
                 } // End loop over tied agents
