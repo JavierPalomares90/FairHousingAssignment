@@ -51,7 +51,6 @@ public class Assignment
             Map<House, Agent> owners;
             // Loop through the list of all agent priority lists and solve the housing allocation problem given each one
             for (List<Agent> agentPrior: agentPriorities) {
-                System.out.println(agentPrior.toString());
 
                 //housing = new FairHousing(filename, new NoOwnersInitialization(), new DefaultMatching(), agentPrior);
                 housing.initialize();
@@ -61,17 +60,14 @@ public class Assignment
                 // Add the allocation to the list of allocations
                 Allocation allocation = new Allocation(owners);
                 allocations.add(allocation);
-                //PrintOwners(owners);
-                //PrintAvgRank(owners);
 
-                //System.out.println();
             }
             // Get the most fair allocation
-            int minFairScore = Integer.MAX_VALUE;
+            double minFairScore = Double.MAX_VALUE;
             Allocation best = null;
             for (Allocation a: allocations)
             {
-                int fairness = a.getFairnessScore();
+                double fairness = a.getFairnessScore();
                 if(fairness < minFairScore)
                 {
                     minFairScore = fairness;
@@ -79,16 +75,19 @@ public class Assignment
                 }
             }
             PrintOwners(best.getMapping());
-            PrintAvgRank(best.getMapping());
+            double avgRank = best.getAvgRank();
+            System.out.println("Average rank of allocated Houses to Agents is " + avgRank+"\n");
 
-            System.out.println();
             return;
         }
         if(housing == null)return;
 
         Map<House, Agent> owners = housing.solve();
+        Allocation a = new Allocation(owners);
         PrintOwners(owners);
-        PrintAvgRank(owners);
+
+        double avgRank = a.getAvgRank();
+        System.out.println("Average rank of allocated Houses to Agents is " + avgRank+"\n");
     }
 
     private static void PrintOwners(Map<House, Agent> owners) {
@@ -100,23 +99,4 @@ public class Assignment
         }
     }
 
-    private static void PrintAvgRank(Map<House, Agent> owners) {
-        int numRanks = 0;
-        double sumRanks = 0.0;
-        for (House h: owners.keySet()) {
-            int rank = 0;
-            Agent a = owners.get(h);
-            for (int i = 0; i<a.preferences.size(); i++ ) {
-                if (a.preferences.get(i).index == h.index) {
-                    rank = i + 1;
-                    numRanks++;
-                    sumRanks += rank;
-                    break;
-                }
-            }
-            //System.out.println("Agent " + (a.index+1) + " owns House " + (h.index+1) + " with rank " + rank);
-        }
-        double avgRank = sumRanks / numRanks;
-        System.out.println("Average rank of allocated Houses to Agents is " + avgRank);
-    } // End PrintAvgRank()
 }
