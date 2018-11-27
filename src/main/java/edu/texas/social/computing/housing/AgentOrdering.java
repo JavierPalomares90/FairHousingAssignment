@@ -3,11 +3,13 @@ package edu.texas.social.computing.housing;
 import edu.texas.social.computing.housing.initialization.NoOwnersInitialization;
 import edu.texas.social.computing.housing.matching.PoorestAgentWinsMatching;
 import edu.texas.social.computing.housing.objects.Agent;
-import edu.texas.social.computing.housing.objects.House;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tiffanytillett on 11/25/18.
@@ -34,6 +36,25 @@ public class AgentOrdering {
         int n = ParseFileForN(filename);
 
         Housing housing = new FairHousing(filename, new NoOwnersInitialization(), new PoorestAgentWinsMatching(), null);
+        if(housing == null) return orderings;
+
+        Set<Agent> J = new HashSet<>();
+        for (int j = 0; j < n; j++) {
+            J.add(housing.agents.get(j));
+        }
+
+        orderings = GenOrderings(J);
+
+        return orderings;
+    }
+
+    public static List<List<Agent>> GenOrderings(Housing housing) {
+
+        List<List<Agent>> orderings = null;
+        //int n = ParseFileForN(filename);
+        int n = housing.agents.size();
+
+        //Housing housing = new FairHousing(filename, new NoOwnersInitialization(), new PoorestAgentWinsMatching(), null);
         if(housing == null) return orderings;
 
         Set<Agent> J = new HashSet<>();
