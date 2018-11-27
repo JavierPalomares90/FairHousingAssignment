@@ -2,15 +2,16 @@ package edu.texas.social.computing.housing;
 
 import edu.texas.social.computing.housing.initialization.NoOwnersInitialization;
 import edu.texas.social.computing.housing.initialization.OwnersInitialization;
+import edu.texas.social.computing.housing.matching.DefaultMatching;
 import edu.texas.social.computing.housing.matching.FairOwnerMatching;
 import edu.texas.social.computing.housing.matching.PoorestAgentWinsMatching;
 import edu.texas.social.computing.housing.objects.Agent;
 import edu.texas.social.computing.housing.objects.Allocation;
 import edu.texas.social.computing.housing.objects.House;
-import edu.texas.social.computing.housing.AgentOrdering;
 
-import java.util.Map;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Assignment
@@ -44,21 +45,22 @@ public class Assignment
         }else if (AGENT_PRIORITY_HOUSING_OPTION.equals(housingSelection))
         {
 
+            allocations = new HashSet<>();
             List<List<Agent>> agentPriorities = AgentOrdering.GenOrderings(filename);
             // Loop through the list of all agent priority lists and solve the housing allocation problem given each one
             for (List<Agent> agentPrior: agentPriorities) {
                 System.out.println(agentPrior.toString());
 
-                housing = new FairHousing(filename, new NoOwnersInitialization(), new FairOwnerMatching(), agentPrior);
+                housing = new FairHousing(filename, new NoOwnersInitialization(), new DefaultMatching(), agentPrior);
                 Map<House, Agent> owners = housing.solve();
 
                 // Add the allocation to the list of allocations
                 Allocation allocation = new Allocation(owners);
                 allocations.add(allocation);
-                PrintOwners(owners);
-                PrintAvgRank(owners);
+                //PrintOwners(owners);
+                //PrintAvgRank(owners);
 
-                System.out.println();
+                //System.out.println();
             }
             // Get the most fair allocation
             int minFairScore = Integer.MAX_VALUE;
@@ -72,6 +74,10 @@ public class Assignment
                     best = a;
                 }
             }
+            PrintOwners(best.getMapping());
+            PrintAvgRank(best.getMapping());
+
+            System.out.println();
             return;
         }
         if(housing == null)return;
