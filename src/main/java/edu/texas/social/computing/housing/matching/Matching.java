@@ -82,8 +82,6 @@ public abstract class Matching implements MatchingStrategy
             G[i] = 0; // everyone will start with first choice
         }
 
-        generateJs();
-        genGlobalStates();
     }
 
     void genGlobalStates() {
