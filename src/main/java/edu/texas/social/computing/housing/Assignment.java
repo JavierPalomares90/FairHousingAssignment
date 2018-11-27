@@ -51,7 +51,6 @@ public class Assignment
             Map<House, Agent> owners;
             // Loop through the list of all agent priority lists and solve the housing allocation problem given each one
             for (List<Agent> agentPrior: agentPriorities) {
-                System.out.println(agentPrior.toString());
 
                 //housing = new FairHousing(filename, new NoOwnersInitialization(), new DefaultMatching(), agentPrior);
                 housing.initialize();

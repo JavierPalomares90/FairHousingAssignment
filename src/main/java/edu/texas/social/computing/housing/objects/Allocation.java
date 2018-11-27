@@ -54,16 +54,16 @@ public class Allocation {
 
 
 
-	public int getFairnessScore()
+	public double getFairnessScore()
 	{
-		int fairness = 0;
+		double fairness = 0.0;
+		double avgRank = getAvgRank();
 		Set<Agent> agents = agent2HouseMap.keySet();
 		for(Agent agent: agents)
 		{
 			List<House> preferences = agent.preferences;
 			House assignedHouse = agent2HouseMap.get(agent);
 
-			double avgRank = getAvgRank();
 			int preferenceIndex = getPreferenceIndex(assignedHouse,preferences);
 			fairness += Math.abs(preferenceIndex - avgRank);
 		}
@@ -96,7 +96,7 @@ public class Allocation {
 		{
 			if(house.equals(houses.get(i)))
 			{
-				return i;
+				return i + 1; // indexes are 1 based
 			}
 		}
 		return houses.size();
