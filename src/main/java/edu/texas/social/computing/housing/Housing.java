@@ -42,6 +42,10 @@ public abstract class Housing {
        return this.matchingStrategy.findMatching(agents, owners, houses, agentPriority);
     }
 
+    public void setAgentPriority(List<Agent> agentPriority) {
+        this.agentPriority = agentPriority;
+    }
+
     private int ParseFile(String filename) {
 
         int n = 0;
