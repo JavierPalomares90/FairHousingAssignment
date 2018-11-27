@@ -46,6 +46,14 @@ public class Allocation {
 		return house2AgentMap.equals(mapping);
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return house2AgentMap.hashCode();
+	}
+
+
+
 	public int getFairnessScore()
 	{
 		int fairness = 0;

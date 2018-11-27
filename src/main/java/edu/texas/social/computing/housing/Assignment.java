@@ -46,13 +46,17 @@ public class Assignment
         {
 
             allocations = new HashSet<>();
-            List<List<Agent>> agentPriorities = AgentOrdering.GenOrderings(filename);
+            housing = new FairHousing(filename, new NoOwnersInitialization(), new DefaultMatching(), null);
+            List<List<Agent>> agentPriorities = AgentOrdering.GenOrderings(housing);
+            Map<House, Agent> owners;
             // Loop through the list of all agent priority lists and solve the housing allocation problem given each one
             for (List<Agent> agentPrior: agentPriorities) {
                 System.out.println(agentPrior.toString());
 
-                housing = new FairHousing(filename, new NoOwnersInitialization(), new DefaultMatching(), agentPrior);
-                Map<House, Agent> owners = housing.solve();
+                //housing = new FairHousing(filename, new NoOwnersInitialization(), new DefaultMatching(), agentPrior);
+                housing.initialize();
+                housing.setAgentPriority(agentPrior);
+                owners = housing.solve();
 
                 // Add the allocation to the list of allocations
                 Allocation allocation = new Allocation(owners);
