@@ -11,7 +11,7 @@ import java.util.Map;
 public class NoOwnersDefaultMatchingHousing extends Housing{
 
     NoOwnersDefaultMatchingHousing(String filename) {
-        super(filename, new NoOwnersInitialization(), new DefaultMatching());
+        super(filename, new NoOwnersInitialization(), new DefaultMatching(), null);
     }
 
 }

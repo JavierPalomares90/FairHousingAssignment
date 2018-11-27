@@ -12,14 +12,20 @@ public abstract class Matching implements MatchingStrategy
     List<Set<House>> Js = new ArrayList<>();
     Map<House, Agent> owners;
     List<List<House>> globalStates = new ArrayList<>();
+    List<Agent> agentPriority;
     int NUM_AGENTS;
     int[] G;
 
     @Override
-    public Map<House, Agent> findMatching(List<Agent> agents, Map<House, Agent> initialOwners, List<House> houses) {
+    public Map<House, Agent> findMatching(
+            List<Agent> agents,
+            Map<House, Agent> initialOwners,
+            List<House> houses,
+            List<Agent> agentPriority) {
         this.agents = agents;
         this.owners = initialOwners;
         this.houses = houses;
+        this.agentPriority = agentPriority;
         initializeGlobalState();
         solve();
         return owners; // TODO: actually find owners.
@@ -31,7 +37,7 @@ public abstract class Matching implements MatchingStrategy
     void solve() {
         Map<House, Set<Agent>> conflicts = matching();
         while (conflicts.size() > 0) {
-            BreakTies(conflicts);
+            BreakTies(conflicts, agentPriority );
             conflicts = matching();
         }
         SetOwners();
@@ -66,7 +72,7 @@ public abstract class Matching implements MatchingStrategy
         }
     }
 
-    abstract void BreakTies(Map<House,Set<Agent>> conflicts);
+    abstract void BreakTies(Map<House,Set<Agent>> conflicts, List<Agent> agentPriority);
 
     void initializeGlobalState() {
         NUM_AGENTS = agents.size();

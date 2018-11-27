@@ -23,11 +23,13 @@ public abstract class Housing {
     List<Agent> agents;
     Map<House, Agent> owners;
     List<House> houses;
+    List<Agent> agentPriority;
 
-    public Housing(String filename, InitializationStrategy init, MatchingStrategy match) {
+    public Housing(String filename, InitializationStrategy init, MatchingStrategy match, List<Agent> agentPrior) {
         n = ParseFile(filename); // will init agents as well since it's not dependent on strategy
         initializationStrategy = init;
         matchingStrategy = match;
+        this.agentPriority = agentPrior;
         initialize();
     }
 
@@ -37,7 +39,7 @@ public abstract class Housing {
     }
 
     public Map<House, Agent> solve() {
-       return this.matchingStrategy.findMatching(agents, owners, houses);
+       return this.matchingStrategy.findMatching(agents, owners, houses, agentPriority);
     }
 
     private int ParseFile(String filename) {

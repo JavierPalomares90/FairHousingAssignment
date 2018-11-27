@@ -9,7 +9,7 @@ public class FairOwnerMatching extends Matching
 {
 
     @Override
-    void BreakTies(Map<House, Set<Agent>> conflicts) {
+    void BreakTies(Map<House, Set<Agent>> conflicts, List<Agent> agentPriority) {
         for (House h: conflicts.keySet()) {
             Set<Agent> ties = conflicts.get(h);
             Agent o = owners.get(h);

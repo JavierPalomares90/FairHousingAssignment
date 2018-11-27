@@ -3,7 +3,10 @@ package edu.texas.social.computing.housing;
 import edu.texas.social.computing.housing.initialization.NoOwnersInitialization;
 import edu.texas.social.computing.housing.matching.PoorestAgentWinsMatching;
 import edu.texas.social.computing.housing.objects.Agent;
+import edu.texas.social.computing.housing.objects.House;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.*;
 
 /**
@@ -14,7 +17,7 @@ public class AgentOrdering {
     public static void main(String[] args) {
         int n = 4;
 
-        Housing housing = new FairHousing("src/main/resources/test1.txt", new NoOwnersInitialization(), new PoorestAgentWinsMatching());
+        Housing housing = new FairHousing("src/main/resources/test1.txt", new NoOwnersInitialization(), new PoorestAgentWinsMatching(), null);
         if(housing == null)return;
 
         List<Set<Agent>> Js = GenJs(n, housing);
@@ -25,6 +28,23 @@ public class AgentOrdering {
         }
     }
 
+    public static List<List<Agent>> GenOrderings(String filename) {
+
+        List<List<Agent>> orderings = null;
+        int n = ParseFileForN(filename);
+
+        Housing housing = new FairHousing(filename, new NoOwnersInitialization(), new PoorestAgentWinsMatching(), null);
+        if(housing == null) return orderings;
+
+        Set<Agent> J = new HashSet<>();
+        for (int j = 0; j < n; j++) {
+            J.add(housing.agents.get(j));
+        }
+
+        orderings = GenOrderings(J);
+
+        return orderings;
+    }
 
     private static void PrintOrderings(Set<Agent> subset, List<List<Agent>> orderings) {
         System.out.println("For subset: " + subset.toString() + " we have the below possible orderings: ");
@@ -78,4 +98,26 @@ public class AgentOrdering {
         }
         return Js;
     }
+
+    private static int ParseFileForN(String filename) {
+
+        int size = 0;
+        BufferedReader reader = null;
+        String text = null;
+
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+            if (( text = reader.readLine()) != null) {
+                size = Integer.parseInt(text);
+            }
+
+            reader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return size;
+    } // End
+
 }

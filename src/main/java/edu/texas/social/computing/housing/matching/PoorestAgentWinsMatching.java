@@ -14,7 +14,7 @@ public class PoorestAgentWinsMatching extends Matching
 {
     // The agent with the worst current house wins the tie
     @Override
-    void BreakTies(Map<House, Set<Agent>> conflicts)
+    void BreakTies(Map<House, Set<Agent>> conflicts, List<Agent> agentPriority)
     {
         Set<House> houses = conflicts.keySet();
         for (House house:houses)
