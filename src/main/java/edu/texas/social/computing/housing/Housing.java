@@ -15,7 +15,7 @@ import java.util.Map;
  * Objects that extend from Housing have an initialization and matching strategy to allow for a solution
  * to the housing allocation problem
  */
-public abstract class Housing {
+abstract class Housing {
     private int n;
     InitializationStrategy initializationStrategy;
     MatchingStrategy matchingStrategy;
@@ -25,7 +25,7 @@ public abstract class Housing {
     List<House> houses;
     List<Agent> agentPriority;
 
-    public Housing(String filename, InitializationStrategy init, MatchingStrategy match, List<Agent> agentPrior) {
+    Housing(String filename, InitializationStrategy init, MatchingStrategy match, List<Agent> agentPrior) {
         n = ParseFile(filename); // will init agents as well since it's not dependent on strategy
         initializationStrategy = init;
         matchingStrategy = match;
@@ -33,46 +33,46 @@ public abstract class Housing {
         initialize();
     }
 
-    public void initialize() {
+    void initialize() {
         //agents = initializationStrategy.initializeAgents(n);
         owners = initializationStrategy.initializeOwners(n, agents);
     }
 
-    public Map<House, Agent> solve() {
-       return this.matchingStrategy.findMatching(agents, owners, houses, agentPriority);
+    Map<House, Agent> solve() {
+        return this.matchingStrategy.findMatching(agents, owners, houses, agentPriority);
     }
 
-    public void setAgentPriority(List<Agent> agentPriority) {
+    void setAgentPriority(List<Agent> agentPriority) {
         this.agentPriority = agentPriority;
     }
 
     private int ParseFile(String filename) {
 
         int n = 0;
-        BufferedReader reader = null;
-        String text = null;
+        BufferedReader reader;
+        String text;
 
         try {
             reader = new BufferedReader(new FileReader(filename));
-            if (( text = reader.readLine()) != null) {
+            if ((text = reader.readLine()) != null) {
                 n = Integer.parseInt(text);
             }
 
             // create Houses
             houses = new ArrayList<>();
-            for (int i=0; i<n; i++) {
+            for (int i = 0; i < n; i++) {
                 House h = new House(i);
                 houses.add(h);
             }
 
             agents = new ArrayList<>();
-            for (int i=0; i<n; i++) {
-                if (( text = reader.readLine()) != null) {
+            for (int i = 0; i < n; i++) {
+                if ((text = reader.readLine()) != null) {
                     ArrayList<House> line = new ArrayList<>();
                     String[] ints = text.split(" ");
-                    for (int j=0; j<n; j++) {
+                    for (int j = 0; j < n; j++) {
                         int index = Integer.parseInt(ints[j]);
-                        line.add(houses.get(index-1));
+                        line.add(houses.get(index - 1));
                     }
                     Agent a = new Agent(i);
                     a.preferences = line;
@@ -88,7 +88,4 @@ public abstract class Housing {
         return n;
 
     }
-
-
-
 }

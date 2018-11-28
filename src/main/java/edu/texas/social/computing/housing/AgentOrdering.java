@@ -11,9 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by tiffanytillett on 11/25/18.
- */
 public class AgentOrdering {
 
     public static void main(String[] args) {
@@ -123,8 +120,8 @@ public class AgentOrdering {
     private static int ParseFileForN(String filename) {
 
         int size = 0;
-        BufferedReader reader = null;
-        String text = null;
+        BufferedReader reader;
+        String text;
 
         try {
             reader = new BufferedReader(new FileReader(filename));
@@ -139,6 +136,6 @@ public class AgentOrdering {
         }
 
         return size;
-    } // End
+    }
 
 }

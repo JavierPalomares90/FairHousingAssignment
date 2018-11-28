@@ -28,7 +28,7 @@ public abstract class Matching implements MatchingStrategy
         this.agentPriority = agentPriority;
         initializeGlobalState();
         solve();
-        return owners; // TODO: actually find owners.
+        return owners;
     }
 
     /**
