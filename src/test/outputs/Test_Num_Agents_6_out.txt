@@ -1,0 +1,7 @@
+House 4 is owned by agent 5
+House 1 is owned by agent 6
+House 2 is owned by agent 1
+House 3 is owned by agent 2
+House 5 is owned by agent 4
+House 6 is owned by agent 3
+Average rank of allocated Houses to Agents is 1.5
