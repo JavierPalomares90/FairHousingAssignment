@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public interface InitializationStrategy {
 
-    public Map<House, Agent> initializeOwners(int N, List<Agent> agents);
+    Map<House, Agent> initializeOwners(int N, List<Agent> agents);
 
-    //public List<Agent> initializeAgents(int N, String file);
 }

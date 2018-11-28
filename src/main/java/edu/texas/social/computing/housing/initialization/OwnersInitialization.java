@@ -24,14 +24,4 @@ public class OwnersInitialization implements InitializationStrategy {
         }
         return owners;
     }
-
-    /*@Override
-    public List<Agent> initializeAgents(int N, String file) {
-        List<Agent> agents = new ArrayList<>();
-        for (int i = 0; i < N; i++) {
-            agents.add(new Agent(i)); // TODO: add the preferences for each agent
-        }
-        return agents;
-    } */
-
 }
