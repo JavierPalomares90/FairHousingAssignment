@@ -24,11 +24,13 @@ public class Assignment {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            return;
+            throw new IllegalArgumentException("Please enter a filename and housing assignment configuration.");
         }
-        String filename = args[0]; // "src/test/resources/test1.txt"
-        String housingSelection = args[1]; //2
 
+        String filename = args[0]; // "src/test/resources/test1.txt"
+        System.out.println("Running Fair Housing with test file=" + filename);
+        String housingSelection = args[1]; //2
+        System.out.println("Running Fair Housing with housing selection=" + housingSelection);
         List<Agent> DEFAULT_AGENT_PRIOR = null;
 
         Housing housing = null;
