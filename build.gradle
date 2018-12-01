@@ -3,10 +3,6 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-ext {
-    filePath = "./src/test/resources/"
-}
-
 def getPropertyOrDefault (String propertyName, String defaultValue) {
     project.hasProperty(propertyName) ? project.property(propertyName) : defaultValue
 }
@@ -26,5 +22,5 @@ dependencies {
 task runApp(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.texas.social.computing.housing.Assignment'
-    args project.property('filePath') + getPropertyOrDefault('fileName',  "Test_Num_Agents_7.txt"), getPropertyOrDefault("testName", "4")
+    args getPropertyOrDefault('filePath', "./src/test/resources/") + getPropertyOrDefault('fileName',  "Test_Num_Agents_7.txt"), getPropertyOrDefault("testName", "4")
 }

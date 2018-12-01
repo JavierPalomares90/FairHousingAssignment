@@ -12,11 +12,12 @@ To run using the default test file and the Fair Housing Allocation Algorithm run
 ./gradlew runApp
 ```
 To pass in a different test file or to run with a different experimental algorithm, 
-you can pass in a `fileName` or `testName` 
-(1, 2, 3, 4 are supported test names. See below for more information.):
+you can pass in a `fileName` or `testName` or `filePath` all of which are optional.
+The defaults are  `Test_Num_Agents_7.txt`, `./src/test/resources/`, and `4` 
+respectively. 1, 2, 3, 4 are supported test names. See below for more information.
 
 ```
-./gradlew runApp -PfileName=test1.txt -PtestName=2
+./gradlew runApp -PfilePath=./src/test/resources/ -PfileName=test1.txt -PtestName=2 
 ```
 
 ###Using intelliJ or Jar
