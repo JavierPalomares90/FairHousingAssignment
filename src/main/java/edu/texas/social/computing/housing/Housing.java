@@ -17,13 +17,13 @@ import java.util.Map;
  */
 abstract class Housing {
     private int n;
-    InitializationStrategy initializationStrategy;
-    MatchingStrategy matchingStrategy;
+    private InitializationStrategy initializationStrategy;
+    private MatchingStrategy matchingStrategy;
 
     List<Agent> agents;
-    Map<House, Agent> owners;
-    List<House> houses;
-    List<Agent> agentPriority;
+    private Map<House, Agent> owners;
+    private List<House> houses;
+    private List<Agent> agentPriority;
 
     Housing(String filename, InitializationStrategy init, MatchingStrategy match, List<Agent> agentPrior) {
         n = ParseFile(filename); // will init agents as well since it's not dependent on strategy
@@ -34,7 +34,6 @@ abstract class Housing {
     }
 
     void initialize() {
-        //agents = initializationStrategy.initializeAgents(n);
         owners = initializationStrategy.initializeOwners(n, agents);
     }
 
