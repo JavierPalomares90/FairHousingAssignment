@@ -3,6 +3,14 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
+ext {
+    filePath = "./src/test/resources/"
+}
+
+def getPropertyOrDefault (String propertyName, String defaultValue) {
+    project.hasProperty(propertyName) ? project.property(propertyName) : defaultValue
+}
+
 sourceCompatibility = 1.8
 
 repositories {
@@ -13,4 +21,10 @@ repositories {
 dependencies {
     compile 'junit:junit:4.11'
     testCompile "junit:junit:4.11"
+}
+
+task runApp(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'edu.texas.social.computing.housing.Assignment'
+    args project.property('filePath') + getPropertyOrDefault('fileName',  "Test_Num_Agents_7.txt"), getPropertyOrDefault("testName", "4")
 }
